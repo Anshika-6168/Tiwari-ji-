@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Quiz App using JavaScript</title>
+<a href="https://ibb.co/pXdTx6M"><img src="https://i.ibb.co/DKQFtPv/IMG-20231016-WA0002.jpg" alt="IMG-20231016-WA0002" border="0"></a>
+  <h1><font size="10px" color="RED"> PCIT ONFLINE TEST SERIES</h1></font>
+  <h2><font size="6px" color="cyan">Ram Nagar (Pathri Bazar) Gonda Uttar Pradesh</font></h2>
+<style>
+/* ... your existing styles ... */
+
+body {
+    /* ... your existing styles ... */
+}
+
+h1, h2 {
+    text-align: center;
+    color: #fff;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-decoration: underline;
+    text-underline-offset: 8px;
+    font-family: 'Arial', sans-serif; /* Change the font family as needed */
+}
+
+h2 {
+    font-size: 24px;
+    margin-top: 10px;
+    font-family: 'Arial', sans-serif; /* Change the font family as needed */
+}
+
+/* Adding Border Color Effect Animation */
+h1:hover, h2:hover {
+    border: 2px solid #fff;
+    border-radius: 10px;
+    transition: border 0.3s ease-in-out;
+}
+
+/* ... your existing styles ... */
+</style>
+      
+    <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(to right bottom, #08203e, #557c93);
+    color: #fff;
+    display: grid;
+    place-items: center;
+}
+
+.container {
+    width: 80%;
+    max-width: 850px;
+    padding: 30px;
+    text-align: center;
+    display: none;
+}
+
+.container h1 {
+    font-size: 36px;
+    margin-bottom: 40px;
+    text-decoration: underline;
+    text-underline-offset: 8px;
+}
+
+.container .question {
+    font-size: 26px;
+    margin-top: 20px;
+}
+
+.container .choices {
+    margin-top: 20px;
+}
+
+.choice {
+    font-size: 20px;
+    background-color: #eee;
+    color: #000;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: left;
+    width: 60%;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(50%);
+    animation: fade-in 0.5s ease forwards;
+}
+
+.choice:hover{
+    background-color: #ddd;
+}
+
+.choice.selected{
+    background-color: blue;
+    color: #fff;
+}
+
+.choice.correct {
+    background-color: #4CAF50; /* Green for correct answer */
+    color: #fff;
+}
+
+.choice.wrong {
+    background-color: #FF0000; /* Red for wrong answer */
+    color: #fff;
+}
+
+.btn{
+    width: 60%;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 12px 20px;
+    margin: 20px auto 0 auto;
+    background-color: #006400;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: #08780c;
+}
+
+.scoreCard{
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+.alert{
+    background-color: #5d9b63;
+    border-radius: 5px;
+    width: 100%;
+    padding: 12px;
+    position: absolute;
+    top: 0;
+    display: none;
+}
+
+.startBtn{
+    width: 15%;
+    padding-block: 20px;
+    text-align: center;
+}
+
+.timer{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: #08203e;
+    border: 2px solid #f00;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Adding Animation to Timer */
+@keyframes pulse{
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+/* Adding Animation to choices */
+@keyframes fade-in{
+    0%{
+        opacity: 0;
+        transform: translateY(50%);
+    }
+    100%{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media screen and (max-width:900px){
+    .container {
+        width: 100%;
+        margin-top: 50px;
+    }
+    .container h1{
+        font-size: 24px;
+    }
+    .container .question{
+        font-size: 22px;
+    }
+
+    .timer{
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .startBtn{
+        width: 50%;
+    }
+}
+</style>
+<body>
+    <div class="alert">Alert</div>
+    <div class="btn startBtn">Start</div>
+    <div class="container">
+        <h1>CCC OFFLINE TEST</h1>
+        <div class="question"></div>
+        <div class="choices"></div>
+        <button class="btn nextBtn">Next</button>
+        <div class="scoreCard"></div>
+        <div class="timer"></div>
+    </div>
+
+  <script>
+  const container = document.querySelector('.container');
+const questionBox = document.querySelector('.question');
+const choicesBox = document.querySelector('.choices');
+const nextBtn = document.querySelector('.nextBtn');
+const scoreCard = document.querySelector('.scoreCard');
+const alert = document.querySelector('.alert');
+const startBtn = document.querySelector('.startBtn');
+const timer = document.querySelector('.timer');
+
+
+// Make an array of objects that stores question, choices of question and answer
+const quiz = [
+    {
+        question: "Q.BHIM एप ककसके द्वारा डेवलप कया गया ?",
+        choices: ["A.National Payment corporation of india (NPCI)", "B.Nation Payment Computer of India", "c.दोनो", "d. इनमे से कोई नही"],
+        answer: "A.National Payment corporation of india (NPCI)"
+    },
+    {
+        question: "Q. BHIM App का परूा नाम क्या है?",
+        choices: ["A.Bharat Interface for Money", "b.Bharat Internet for money", "c.Bharat Intface for moniter", "d.Non of these"],
+        answer: "A.Bharat Interface for Money"
+    },
+    {
+        question: "Q. Libre Office Clac मे साइडबार को हाइड करने की Shortcut keyहै?",
+        choices: ["a. Ctrl+F3", "b. Ctrl+F5", "c. Ctrl+F7", "d. Ctrl+F9"],
+        answer: "b. Ctrl+F5"
+    },
+    {
+        question: "Q.In Libre office calc What is the shortcut to convert the date written in a cell?",
+        choices: ["a. Ctrl+Shift+F3", "b. Ctrl+Alt+3", "c. Ctrl+Shift+3", "d. None of these"],
+        answer: "c. Ctrl+Shift+3"
+    },
+  {
+        question: "Q.LibreOffice मे फाइंड और ररप्लेस की कमाण्ड ऑपेन कर सकते है?",
+        choices: ["a. Ctrl +H", "b. Ctrl+M", "c. Ctrl+K", "d. Alt+H"],
+        answer: "a. Ctrl +H"
+    }
+,
+  {
+        question: "Q.LibreOffice Calc से बाहर ननकलने के  क्या प्रेस करे ?",
+        choices: ["a. Ctrl+X", "b. Ctrl+W", "c. Ctrl+R", "d. None of these"],
+        answer: "b. Ctrl+W"
+    },
+    {
+        question: "LibreOffice Writer मे ककसकी द्वारा र्ेबल इंसर्ट कर सकते है ?",
+        choices: ["a. Formate", "b. Style", "c. Table ", "d. Form"],
+        answer: "c. Table"
+    },
+    {
+        question: "LibreOffice राइर्र मे डडफाल्र् फॉन्र् साइज क्या होता है ?",
+        choices: ["a. 10", "b. 12", "c. 6 ", "d. 8"],
+        answer: "b. 12"
+    },
+    {
+        question: "LibreOffice राइर्र को ऑपेन करने पर डडफाल्र्फॉन्र् कौन सा होता है ?",
+        choices: ["a. Liberation Serif", "b. Linux Biolinum G", "c. Andalus ", "d. कोई भी"],
+        answer: "a. Liberation Serif"
+    },
+    {
+        question: "फुर्नोर् हमेशा होता है ?",
+        choices: ["a. पेज के सबसे ऊपर", "b. पेज के सबसे नीचे", "c. पेज के दाये ", "d. पेज के बांये"],
+        answer: "b. पेज के सबसे नीचे"
+    },
+    {
+        question: "राइर्र मे फामूटला बार ऑपेन करने की शार्टकर् की क्या है ?",
+        choices: ["a. F2", "b. F4", "c. F5 ", "d. F6"],
+        answer: "a. F2"
+    },
+    {
+        question: "राइर्र मे सबस्क्रिप्र् की शार्टकर् की क्या होगी ?",
+        choices: ["a. Ctrl+Shift+B", "b. Ctrl+Shift+P", " c. Ctrl+Shift+A", "d. Ctrl+Shift+C"],
+        answer: "a. Ctrl+Shift+B"
+    },
+    {
+        question: "LibreOffice मे Scroll Bar को हाइड ककया जा सकताहै ?",
+        choices: ["a. True",  "b. False"],
+        answer: "a. True"
+    },
+    {
+        question: "NPS (National Pension Scheme) – राष्ट्रीय पेंशन योजनाकी शुरुआत कब हुई थी |",
+        choices: ["a. 1 जनवरी 2004", "b. 2 फरवरी 2004", " c. 10 जनवरी 2004", "d. कोई नही"],
+        answer: "a. 1 जनवरी 2004"
+    },
+    {
+        question: "ककस प्रकार के खाते मे रकम ननकालने पर कोई प्रनतबंधनही है ?",
+        choices: ["a. बचत खाता", "b. चालू खाता", " c. नकद शाख खाता", "d. आवती जमा खाता"],
+        answer: "b. चालू खाता"
+    },
+    {
+        question: "ननम्न मे कौन-से कायट मोबाइल बैंक के माध्यम सेसम्भव है -",
+        choices: ["a. फण्ड रांरफर", "b. बबजली बबल भुगतान", "c. खातो की बचत रालश देखना ", "d. उपरोक्त सभी"],
+        answer: "d. उपरोक्त सभी"
+    },
+    {
+        question: "P2P का अथट पीयर-र्ू-पीयर से है |",
+        choices: ["a. True", "b.false"],
+        answer: "a. True"
+    },
+    {
+        question: "LAN, MAN, WAN कौन सी जेनेरेशन मे आये ?",
+        choices: ["a. Ist Generation", "b. IInd generation", " c. IIIrd Generation", "d. IVth Generation"],
+        answer: ""
+    },
+    {
+        question: "बैंक ककस पर ब्याज लेता है ?",
+        choices: ["a. जमाओ पर", "b. ऋणों पर", "c. दोनों ", "d. इनमे से कोई नहीं"],
+        answer: "b. ऋणों पर"
+    },
+    {
+        question: "इंर्रनेर् का उपयोग कर आप कर सकते है ?",
+        choices: ["a. आनलाइन गाने डाउनलोड कर सकते है", "b. आनलाइन र्ीवी देखना", " c. आनलाइन मोबाइल फोन खरीदना", "d. उपरोक्त सभी"],
+        answer: "d. उपरोक्त सभी"
+    },
+    {
+        question: "ननम्न मे कौन-सा पहला नेर्वकट था |",
+        choices: ["a. ARPANET", "b. NSFnet", " c. Vnet", "d. Inet"],
+        answer: "a. ARPANET"
+    },
+    {
+        question: "ववण्डो के डेरक्र्ॉप पर जो इमेज प्रदलशटत होती है,उसे कहते है |",
+        choices: ["a. मेन इमेज", "b. वालपेपर", "c. डेरक्र्ॉप इमेज ", "d. ववण्डो इमेज"],
+        answer: "b. वालपेपर"
+    },
+    {
+        question: "ननम्न मे ककस चचन्ह के द्वारा गुणा के गणणतीय ऑपरेर्र का प्रनतननचधत्व करता है |",
+        choices: ["a. *", "b. >", "c. / ", "d. "],
+        answer: "a. *"
+    },
+    {
+        question: "ककसी भी र्ेक्रर् को कर् करने पर आपकी सूचना कहााँ सेव हो जाती है ?",
+        choices: ["a. डेरकर्ॉप", "b. स्क्क्लपबोडट", " c. माई डाक्यूमेंर्", "d. वप्रर्ं र"],
+        answer: "b. स्क्क्लपबोडट"
+    },
+    {
+        question: "कम्प्यूर्र साक्षरता ददवस कब मनाया जाता है ?",
+        choices: ["a. 2 ददसम्बर", "b. 1 जनवरी", " c. 5 ददसम्बर", "d. कोई नही"],
+        answer: "a. 2 ददसम्बर"
+    },
+    {
+        question: "इण्र्रनेर् मे प्रयुक्त पद http:// का सही रूप है ?",
+        choices: ["a. Hyper Tech Transfer Protocol", "b. Hyper Text Transfer Protocol", "c. Hyper Text Transmission protocol ", "d. None of these"],
+        answer: "b. Hyper Text Transfer Protocol"
+    },
+    {
+        question: "कम्प्यूर्र को ककस प्रकार की बुद्चध की संज्ञा दी गयी है ?",
+        choices: ["a. मानव", "b. कृबिम", " c. शुद्ध", "d. अन्य"],
+        answer: "b. कृबिम"
+    },
+    {
+        question: "LibreOffice Clac मे अचधकतम ककतनी शीर्े जोड सकते है ?",
+        choices: ["a. 1000", "b. 1024", " c. 10000", "d. कोई सीमा नही"],
+        answer: "c. 10000"
+    },
+    {
+        question: "LibreOffice Calc मे एक सेल मे अचधकतम ककतने करैक्र्र ललख सकते है ?",
+        choices: ["a. 32767", "b. 32654", "c. 356547 ", "d. इनमे से कोई नही"],
+        answer: "a. 32767"
+    },
+    {
+        question: "LibreOffice Calc मे एक बकटशीर् मे अचधकतम ककतने सेल होते है ?",
+        choices: ["a. 1,073,741,824", "b. 1,073,741,824", "c. 1,073,741,824 ", "d. कोई सीमा नही"],
+        answer: "a. 1,073,741,824"
+    },
+    {
+        question: "लाइनक्स मे नई डायरक्र्री बनाने की क्या कमाण्डहै ?",
+        choices: ["a. Mkdir", "b. Mv", "c. Cd ", "d.rm"],
+        answer: "a. Mkdir"
+    },
+    {
+        question: "ननम्न मे कनेल मुख्य भाग है ?",
+        choices: ["a. Linux", "b. Windows", " c. दोनो", "d. कोई नही"],
+        answer: "a. Linux"
+    },
+    {
+        question: "Ubuntu लाइनक्स आधररत ऑपरेदर्ंग लसर्ेम है",
+        choices: ["a. True", "b. False"],
+        answer: "a. True"
+    },
+    {
+        question: "LibreOffice Calc मे वाईडडफाल्र् फॉन्र् साइज क्या होता है ?",
+        choices: ["a. 12", "b. 10", "c. 6 ", "d. 8"],
+        answer: "b. 10"
+    },
+    {
+        question: "भारत मे सबसे पापुलर सोशल साइर् है ?",
+        choices: ["a. फेसबुक", "b. यूर्ूब", " c. ललक्ं डइन", "d. इंरर्ाग्राम"],
+        answer: "a. फेसबुक"
+    },
+    {
+        question: "LibreOffice Calc मे ड्राववगं र्ूलबार को अपने रथान से कही दूसरे रथान पर भी रखा जा सकता है?",
+        choices: ["a. True", "b.false"],
+        answer: "a.True"
+    },
+    {
+        question: "यूट्यूब का हेड्कक्वार्र United States of America में कहााँ स्क्रथत है ?",
+        choices: ["a. California", "b. New York", " c. Washington", "d. Virginia"],
+        answer: "a. California"
+    },
+    {
+        question: "यूट्यूब की शुरुआत कब हुई थी ?",
+        choices: ["a. 10 फरवरी 2005", "b. 14 फरवरी 2005", " c. 5 फरवरी 2005", "d. इनमे से कोई नही"],
+        answer: "b. 14 फरवरी 2005"
+    },
+    {
+        question: "Impress Presentation प्रोग्राम मे रर्ेर्स बार को हाइड ककया जा सकता है?",
+        choices: ["a. True", "b. False"],
+        answer: "a. True"
+    },
+    {
+        question: "PowerPoint मे अचधकतम जूम साइज क्या है ?",
+        choices: ["a. 200%", "b. 500%", " c. 600%", "d. 400%"],
+        answer: "d. 400%"
+    },
+    
+];
+
+  
+// Making Variables
+let currentQuestionIndex = 0;
+let score = 0;
+let quizOver = false;
+let timeLeft = 30;
+let timerID = null;
+
+// Arrow Function to Show Questions
+const showQuestions = () => {
+    const questionDetails = quiz[currentQuestionIndex];
+    questionBox.textContent = questionDetails.question;
+
+    choicesBox.textContent = "";
+    for (let i = 0; i < questionDetails.choices.length; i++) {
+        const currentChoice = questionDetails.choices[i];
+        const choiceDiv = document.createElement('div');
+        choiceDiv.textContent = currentChoice;
+        choiceDiv.classList.add('choice');
+        choicesBox.appendChild(choiceDiv);
+
+        choiceDiv.addEventListener('click', () => {
+            if (choiceDiv.classList.contains('selected')) {
+                choiceDiv.classList.remove('selected');
+            }
+            else {
+                choiceDiv.classList.add('selected');
+            }
+        });
+    }
+
+    if(currentQuestionIndex < quiz.length){
+        startTimer();
+    }
+}
+  
+
+// Function to check answers
+const checkAnswer = () => {
+    const selectedChoice = document.querySelector('.choice.selected');
+    if (selectedChoice.textContent === quiz[currentQuestionIndex].answer) {
+        // alert("Correct Answer!");
+        displayAlert("Correct Answer!");
+        score++;
+    }
+    else {
+        // alert("Wrong answer");
+        displayAlert(`Wrong Answer! ${quiz[currentQuestionIndex].answer} is the Correct Answer`);
+    }
+    timeLeft = 30;
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quiz.length) {
+        showQuestions();
+    }
+    else {
+        stopTimer();
+        showScore();
+    }
+}
+
+// Function to show score
+const showScore = () => {
+    questionBox.textContent = "";
+    choicesBox.textContent = "";
+    scoreCard.textContent = `You Scored ${score} out of ${quiz.length}!`;
+    displayAlert("You have completed this CCC Test!");
+    nextBtn.textContent = "Play Again";
+    quizOver = true;
+    timer.style.display = "none";
+}
+
+// Function to Show Alert
+const displayAlert = (msg) => {
+    alert.style.display = "block";
+    alert.textContent = msg;
+    setTimeout(()=>{
+        alert.style.display = "none";
+    }, 2000);
+}
+
+// Function to Start Timer
+const startTimer = () => {
+    clearInterval(timerID); // Check for any exist timers
+    timer.textContent = timeLeft;
+
+    const countDown = ()=>{
+        timeLeft--;
+        timer.textContent = timeLeft;
+        if(timeLeft === 0){
+            const confirmUser = confirm("Time Up!!! Do you want to play the quiz again");
+            if(confirmUser){
+                timeLeft = 30;
+                startQuiz();
+            }
+            else{
+                startBtn.style.display = "block";
+                container.style.display = "none";
+                return;
+            }
+        }
+    }
+    timerID = setInterval(countDown, 1000);
+}
+
+  
+  
+// Function to Stop Timer
+const stopTimer = () =>{
+    clearInterval(timerID);
+}
+
+// Function to shuffle question
+const shuffleQuestions = () =>{
+    for(let i=quiz.length-1; i>0; i--){
+        const j = Math.floor(Math.random() * (i+1));
+        [quiz[i], quiz[j]] = [quiz[j], quiz[i]];
+    }
+    currentQuestionIndex = 0;
+    showQuestions();
+}
+
+// Function to Start Quiz
+const startQuiz = () =>{
+    timeLeft = 30;
+    timer.style.display = "flex";
+    shuffleQuestions();
+}
+
+// Adding Event Listener to Start Button
+startBtn.addEventListener('click', ()=>{
+    startBtn.style.display = "none";
+    container.style.display = "block";
+    startQuiz();
+});
+
+nextBtn.addEventListener('click', () => {
+    const selectedChoice = document.querySelector('.choice.selected');
+    if (!selectedChoice && nextBtn.textContent === "Next") {
+        // alert("Select your answer");
+        displayAlert("Select your answer");
+        return;
+    }
+    if (quizOver) {
+        nextBtn.textContent = "Next";
+        scoreCard.textContent = "";
+        currentQuestionIndex = 0;
+        quizOver = false;
+        score = 0;
+        startQuiz();
+    }
+    else {
+        checkAnswer();
+    }
+});
+  </script>
+</body>
+</html>
+
+</head>
+
+<body>
+    <!-- Your existing HTML code -->
+
+    <div class="container">
+        <h1>CCC OFFLINE TEST</h1>
+        <div class="question"></div>
+        <div class="choices"></div>
+        <button class="btn nextBtn">Next</button>
+        <div class="scoreCard"></div>
+        <div class="timer"></div>
+    </div>
+
+    <!-- Your existing JavaScript code -->
+</body>
+
+
+</html>
